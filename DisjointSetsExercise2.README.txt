@@ -1,0 +1,78 @@
+DisjointSetsExercise2.java README 
+@author - Dakota Jackson
+-------------------------------------------------
+*DisjointSetsExercise2.java: 
+  -Program takes in an integer value 'n' input from user and creates an n x n bitmap 
+   (and draws it on screen for visual representation). The program uses a 1-dimensional array of n * n length and 
+   uses arithmetic to make conversions to fit and check where an element [x][y] in a 2D array would be in a 1D array.
+
+  -Imports: java.util.*; edu.princeton.cs.algs4.*;
+  -Dependencies: TwoDWeightedQuickUnionUF.java
+
+   -The program takes in an int value for 'n'.
+
+   -The program was coded in Dr. Java.
+
+**Compiled in [JDK 8.0_281]   (Opened with "OpenJDK Platform Binary**
+
+------------------------------------------------------------------------------------------------------
+Questions:
+
+1.Give a precise description of each of the algorithms used to solve the problem.
+ 
+Answer:The algorithm for drawing the map is mainly optional and used to verify the results are correct, but I will also give
+       a description for that one as well. 
+
+	-createBitmap():takes in an int value that it squares and then uses to create the bitmap[] array size. It then cycles
+			through the array an depending on the random value between 0.0 and 0.9, it assigns the index a 1 or 2
+			that will be used to determine what color square it will be drawn as.
+       
+	-drawBitmap(): takes in an array named bitmap. It then gets an int named sizeofBM that takes the square root of the 
+		       length of the bitmap (since we did n*n). It then uses that variable to help format the sizes of the squares 
+		       and the scaling. It then cycles through the bitmap elements to see if they are an int 1 or 2
+		       to decide if to color them black or white. It draws the squares using 
+		       StdDraw.filledSquare(x,y,halflength) and StdDraw.square(x,y,halflength).   
+
+	-largestComp():takes in an array named bitmap. It then creates a TwoDWeightedQuickUnionUF object (from its dependancy
+		       class). It then creates an int value that is the square root of our total length of the bitmap array 
+		       (as we did n*n from user input). It then cycles through the array and because it is formatting a 2D
+		       image of squares, it uses the arithmetic (i * sizeOfBM) + j as the basis formula to replicate where an 		       
+		       2D array[x][y] would be. It uses that formula to check if the current index is a black square: if yes,
+		       then it will check it's East and North Neighbors (using arithmetic: i * sizeOfBM) + (j +  1) for East
+		       and ((i + 1) * sizeOfBM) + j for North Neighbors. However, because it is adding to the index in statements
+		       inside the loop, it needs to circumvent the issue of an ArrayOutOfBounds exception that would occur at the
+		       end of the loops. To do this, it checks to make sure the neighbor-being-checked's value doesn't go over the
+		       length of the full bitmap. Additionally, It had to have another if statement to stop the issue of black squares
+		       on the farthest right side unionizing with its would-be East neighbor from wrapping around. To do this, it
+		       checks to see if the value of the current index modulo 'n' value inputted does not equal inputted value - 1.
+		       (this covers all multiples). 
+	
+	-*largestComp() in TwoDWeightedQuickUnionUF.java: starts with an int variable at 0. then compares the elements at index i of
+							  sz[] to see which is largest and then returns it.
+
+
+
+2.A proof or at least an argument in English that proves that the algorithms solve the given problem.
+
+Answer: The problem is solved by the algorithms given because it starts at the bottom left of the n*n grid
+        and checks above and to the east (with appropriate restrictions) to see if they are also black and if
+ 	so, then it unionizes them into a singular component. Then inside of the TwoDWeightedQuickUnionUF.java
+	class, there is a designed algorithm inside a method to compare the elements in sz[i] to see which component
+	is the largest. It then outputs that.
+
+3.An analysis of the running time of the problem that includes the running times of each of the algorithms used.
+
+Answer: 
+
+	-createBitmap(n): O(n^2) --> n for outer loop * n inner loop * Constant, so it would be Cn^2 which gets dropped to just O(n^2).
+	-drawBitmap(bitmap[]): O(n^2) --> n for outer loop * n for inner loop * Constant time (drawing of squares). Cn^2 will also drop to O(n^2).
+	-largestComp(bitmap[]): O((n^2)logn) --->
+				-creating the TwoDWeightedQuickUnionUF object takes n time to initialize.
+				-n^2 for the nested loops similar to above, but the inside statement calls on "uf.union(p,q)".
+				-uf.union(p,q) --> calls on 2 * find(p). find(p) has a time complexity of O(log n) in worst case because of always 
+				                   making the shallow trees unionize with the larger trees. This also makes union O(log n) worst case.
+				-So, largestComp()'s time complexity is n + (n^2 * 3logn). Because we drop lower order and constants, it becomes O((n^2)logn).
+
+	Entire Program is: O(n^2 + n^2 + n^2logn).
+
+

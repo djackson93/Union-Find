@@ -1,0 +1,13 @@
+TwoDWeightedQuickUnionUF.java README 
+@author - Dakota Jackson
+-------------------------------------------------
+*TwoDWeightedQuickUnionUF.java: 
+  -This class is a slight variant from the "WeightedQuickUnionUF.java" given from the book, "Algorithms - fourth edition" written by Robert Sedgewick and
+   Kevin Wayne, on page 228. Not only does it add in path compression, but it adds in the method id() for displaying the id[] array and largestComp() for
+   displaying the largest component of a certain element.
+
+  -Imports: java.util.Arrays;
+
+  -Written in Dr.Java
+
+
